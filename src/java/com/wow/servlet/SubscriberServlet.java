@@ -2,6 +2,8 @@ package com.wow.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,73 +11,73 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.wow.dao.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class SubscriberServlet extends HttpServlet {
 
-    
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        
-        String a=request.getParameter("email");
-        
-        try (PrintWriter out = response.getWriter()) {
-            
-            if()                                // NEED TO WRITE SOMETHING TO REMOVE THE ERROR..
-           {
-            
-            HttpSession session=request.getSession();
-            session.setAttribute("email", email);
-  
-            RequestDispatcher rd=request.getRequestDispatcher("SubscriberServlet");
-            rd.forward(request, response);
-           }
-           else
-           {
-               RequestDispatcher rd=request.getRequestDispatcher("SubscriberDesign.html");
-               rd.include(request, response);
-           }
-           
-        }
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html;charset=UTF-8");
+                PrintWriter out = response.getWriter();
+		
+                
+               // public  String validateIfSubscribed(String email) {
+                String queryCheck="";
+                String check="";
+                String email = request.getParameter("email");
+                
+                try {
+                    
+                    
+                        Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+                        Connection con=DriverManager.getConnection("jdbc:odbc:Wise_dsn","","");
+                        Statement statement=con.createStatement();
+                        String count="";
+
+                        if (email!=null && email.length()>0)    
+                        queryCheck = "SELECT * from Subscription WHERE email = '"+email+"'" ;
+                        ResultSet rs1 = statement.executeQuery(queryCheck);  
+
+                        if(rs1.next())
+                        {
+                            //check="Already Subscribed";            
+                            out.println("Already Subscribed");
+                        }
+                        else
+                        { 
+                            statement.executeUpdate("insert into Subscription values('"+ email +"')");
+                        } 
+
+                        count = "Select count(*) from Subscription" ;
+                        ResultSet rs = statement.executeQuery(count);
+                        int i=0;
+
+                        while(rs.next())
+                        {
+                            count= rs.getString(1);
+                        }
+
+                       // check=count+" Users have already Subscribed ";
+
+			out.println(count+ " Users have already Subscribed ");
+
+			// SubscriberDao dao = new SubscriberDao();
+			// String subscriber=dao.validateIfSubscribed(email);
+
+		} 
+                catch (Exception e) 
+                {
+			e.printStackTrace();		
+                }
+
+                
+           // return email;
+          // }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+	 
 }

@@ -1,11 +1,12 @@
 package com.wow.dao;
 
+import com.wow.servlet.*;
 import java.sql.*;
 
 public class SubscriberDao {
     
 
-    public  String validateIfSubscribed(String a) {
+    public  String validateIfSubscribed(String email) {
         
         String queryCheck="";
         String x="";
@@ -18,8 +19,8 @@ public class SubscriberDao {
             Statement statement=con.createStatement();
             String count="";
             
-            if (a!=null && a.length()>0)    
-            queryCheck = "SELECT * from Subscription WHERE email = '"+a+"'" ;
+            if (email!=null && email.length()>0)    
+            queryCheck = "SELECT * from Subscription WHERE email = '"+email+"'" ;
             ResultSet rs1 = statement.executeQuery(queryCheck);  
             
             if(rs1.next())
@@ -29,7 +30,7 @@ public class SubscriberDao {
             }
             else
             { 
-                statement.executeUpdate("insert into Subscription values('"+ a +"')");
+                statement.executeUpdate("insert into Subscription values('"+ email +"')");
             } 
             
             count = "Select count(*) from Subscription" ;
@@ -52,7 +53,7 @@ public class SubscriberDao {
             System.out.println(ee.toString());
         }
         
-        return a;
+        return email;
         
     }
 }

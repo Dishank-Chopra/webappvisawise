@@ -4,10 +4,17 @@
         <servlet-name>SubscriberServlet</servlet-name>
         <servlet-class>com.wow.servlet.SubscriberServlet</servlet-class>
     </servlet>
+    
     <servlet-mapping>
         <servlet-name>SubscriberServlet</servlet-name>
         <url-pattern>/SubscriberServlet</url-pattern>
     </servlet-mapping>
+    
+    
+     <welcome-file-list>  
+    <welcome-file>SubscriberDesign.html</welcome-file>  
+    </welcome-file-list>  
+    
     <session-config>
         <session-timeout>
             30
