@@ -38,30 +38,39 @@
                 String count = "";
 
                 count = "Select count(*) from Subscription";
+               // ResultSet rs = statement.executeQuery(count);
+               // int i = 0;
+
+                //while (rs.next()) {
+                  //  count = rs.getString(1);
+                //}
+                
+                //out.println(" " + count + " Users have been Subscribed ");
+                
+                if (emailId != null && emailId.length() > 0) {
+                    queryCheck = "SELECT * from Subscription WHERE email = '" + emailId + "'";
+                 
+                ResultSet rs1 = statement.executeQuery(queryCheck);
+
+                if (rs1.next()) {
+                    check = "<br>  <br> You have Already Subscribed ";
+                    // out.println("You have already Subscribed");
+
+                } else {
+                    statement.executeUpdate("insert into Subscription values('" + emailId + "')");
+                    out.println("  ThankYou for Subscribing!!  " + " <br> <br>" );   
+                }
+                }
                 ResultSet rs = statement.executeQuery(count);
-                int i = 0;
+                  
 
                 while (rs.next()) {
                     count = rs.getString(1);
                 }
                 
-                out.println(" " + count + " Users have been Subscribed ");
+                out.println("  " + count + " Users have been Subscribed ");
                 
-                if (emailId != null && emailId.length() > 0) {
-                    queryCheck = "SELECT * from Subscription WHERE email = '" + emailId + "'";
-                }
-                ResultSet rs1 = statement.executeQuery(queryCheck);
-
-                if (rs1.next()) {
-                    check = "You have Already Subscribed";
-                    // out.println("You have already Subscribed");
-
-                } else {
-                    statement.executeUpdate("insert into Subscription values('" + emailId + "')");
-                    out.println("  ThankYou for Subscribing!!");
-                }
-
-                
+            
                                 // check=count+" Users have already Subscribed ";
                 // out.println(" " + count + " Users have been Subscribed ");
                 out.println(" " + check);
@@ -69,7 +78,7 @@
                                 // SubscriberDao dao = new SubscriberDao();
                 // String subscriber=dao.validateIfSubscribed(email);
             } catch (Exception e) {
-                e.printStackTrace();
+                out.println(e.toString());
             }
 
         %>
